@@ -38,4 +38,19 @@ Helpers.editing = function(child)
   }
 end
 
+Helpers.screen = function(child)
+  local rows = function()
+    child.cmd("redraw")
+    return child.get_screenshot().text
+  end
+  return {
+    cell = function(row, col)
+      return rows()[row][col]
+    end,
+    line = function(row)
+      return vim.trim(table.concat(rows()[row]))
+    end,
+  }
+end
+
 return Helpers
