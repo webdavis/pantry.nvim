@@ -10,3 +10,7 @@
       .
       (_) @return.outer
       .)))
+
+(property_declaration
+  name: (_) @assignment.lhs
+  value: (_) @assignment.inner @assignment.rhs) @assignment.outer
