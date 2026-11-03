@@ -23,4 +23,18 @@ return {
     modes = { "n" },
     find = require("pantry.jumps.conflicts").find,
   },
+  {
+    keys = { next = "]`", prev = "[`" },
+    desc = { next = "Next code block", prev = "Previous code block" },
+    modes = { "n", "x", "o" },
+    filetype = "markdown",
+    find = require("pantry.jumps.markdown").fences,
+  },
+  {
+    keys = { next = "]x", prev = "[x" },
+    desc = { next = "Next checkbox", prev = "Previous checkbox" },
+    modes = { "n", "x", "o" },
+    filetype = "markdown",
+    find = require("pantry.jumps.markdown").checkboxes,
+  },
 }

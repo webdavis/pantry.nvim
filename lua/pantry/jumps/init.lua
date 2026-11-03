@@ -28,13 +28,28 @@ local map = function(kind, way, buffer)
   end, { buffer = buffer, desc = "jumps: " .. kind.desc[way] })
 end
 
+local map_both_ways = function(kind, off, buffer)
+  for way in pairs(directions) do
+    if not off[vim.keycode(kind.keys[way])] then
+      map(kind, way, buffer)
+    end
+  end
+end
+
 M.setup = function(opts)
   local off = turned_off(opts or {})
+  local group = vim.api.nvim_create_augroup("pantry.jumps", {})
   for _, kind in ipairs(require("pantry.jumps.registry")) do
-    for way in pairs(directions) do
-      if not off[vim.keycode(kind.keys[way])] then
-        map(kind, way)
-      end
+    if kind.filetype then
+      vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = kind.filetype,
+        callback = function(event)
+          map_both_ways(kind, off, event.buf)
+        end,
+      })
+    else
+      map_both_ways(kind, off)
     end
   end
 end
