@@ -53,4 +53,24 @@ Helpers.screen = function(child)
   }
 end
 
+Helpers.jumps_child = function()
+  return Helpers.new_child([[require("pantry.jumps").setup()]])
+end
+
+Helpers.jumping = function(child)
+  local j = {}
+  j.open = function(filetype, lines)
+    child.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    child.bo.filetype = filetype
+  end
+  j.at = function(row)
+    child.api.nvim_win_set_cursor(0, { row, 0 })
+  end
+  j.press = function(...)
+    child.type_keys(...)
+    return child.api.nvim_win_get_cursor(0)[1]
+  end
+  return j
+end
+
 return Helpers

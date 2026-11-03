@@ -1,5 +1,7 @@
 .PHONY: test format
 
+export TS_DIRS
+
 test: deps/mini.nvim
 	nvim --headless --noplugin -u scripts/minimal_init.lua -c "lua MiniTest.run()"
 
