@@ -1,12 +1,7 @@
-vim.opt.runtimepath:prepend(vim.fn.getcwd())
-vim.opt.runtimepath:append(vim.fn.getcwd() .. "/deps/mini.nvim")
-local data = vim.fn.stdpath("data")
-local ts_dirs = vim.env.TS_DIRS
-local dirs = ts_dirs and ts_dirs ~= "" and vim.split(ts_dirs, ":", { trimempty = true })
-  or { data .. "/site", data .. "/lazy/nvim-treesitter-context", data .. "/lazy/nvim-treesitter-textobjects" }
-for _, dir in ipairs(dirs) do
-  if vim.uv.fs_stat(dir) then
-    vim.opt.runtimepath:append(dir)
-  end
+local root = vim.fn.getcwd()
+vim.opt.runtimepath:prepend(root)
+for _, dep in ipairs({ "mini.nvim", "nvim-treesitter", "nvim-treesitter-context", "nvim-treesitter-textobjects" }) do
+  vim.opt.runtimepath:append(root .. "/deps/" .. dep)
 end
+require("nvim-treesitter").setup({ install_dir = root .. "/deps/parsers" })
 require("mini.test").setup()

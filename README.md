@@ -205,16 +205,12 @@ require("pantry").setup({
 
 ## Development
 
-`make test` runs the tests with [mini.test](https://github.com/echasnovski/mini.nvim). It clones
-mini.nvim into `deps/` the first time. `make format` formats the Lua files with stylua.
-
-The jumps tests need tree-sitter parsers. By default they use the parsers in Neovim's data
-directory and the query files of nvim-treesitter-context and nvim-treesitter-textobjects from
-lazy.nvim. To use other directories, list them in `TS_DIRS`, separated by `:`:
-
-```sh
-make test TS_DIRS=~/parsers:~/queries
-```
+`make test` runs the tests with [mini.test](https://github.com/echasnovski/mini.nvim). The first
+run clones mini.nvim, nvim-treesitter, nvim-treesitter-context and nvim-treesitter-textobjects
+into `deps/` and builds the tree-sitter parsers the tests use there. Building the parsers needs
+the `tree-sitter` CLI and a C compiler. The tests run with their own Neovim data directory under
+`deps/`, so your own parsers and plugins are never used. `make format` formats the Lua files
+with stylua.
 
 ## License
 
