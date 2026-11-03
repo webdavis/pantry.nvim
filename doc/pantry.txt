@@ -5,6 +5,7 @@ CONTENTS                                                     *pantry-contents*
 
   1. Introduction ............................................... |pantry|
   2. rsi .................................................... |pantry-rsi|
+  3. linelimit ........................................ |pantry-linelimit|
 
 ==============================================================================
 INTRODUCTION                                                          *pantry*
@@ -20,6 +21,7 @@ pantry.setup({config})
 >lua
     require("pantry").setup({
       rsi = {},
+      linelimit = {},
     })
 <
 Each module also has its own setup function, for example
@@ -90,4 +92,69 @@ keys
       },
     })
 <
+==============================================================================
+LINELIMIT                                                   *pantry-linelimit*
+
+pantry.linelimit shows how close each line is to a line length limit.
+
+- A faint `│` appears just after the limit on lines that are within `near`
+  columns of it. Shorter lines get nothing.
+- A line that goes past the limit gets `+N` after its end. N is how many
+  columns it is over.
+- Text past the limit keeps its normal color.
+
+pantry checks only the lines on the screen. It counts width in screen
+columns, so a tab or a wide character counts as wide as it looks. Concealed
+text still counts.
+
+                                                      *pantry-linelimit-limit*
+The limit for a window comes from the first of these that is set:
+1. The window's 'colorcolumn'. pantry uses the first entry. `+1` means the
+   limit is 'textwidth', and `81` means the limit is 80.
+2. 'textwidth', when it is above 0.
+3. `max_line_length` from an EditorConfig file.
+4. The `filetypes` option.
+If none of these is set, the window shows nothing.
+
+While the module is on, pantry hides Neovim's own 'colorcolumn' stripe in
+the windows it checks. It still uses the 'colorcolumn' value as the limit.
+|pantry.linelimit.disable()| puts the stripe back.
+
+pantry skips floating windows, buffers that have a 'buftype' such as help or
+terminal buffers, and the filetypes in `skip`.
+
+                                                    *pantry-linelimit-options*
+near
+    How many columns before the limit a line starts to get the mark.
+    Default: `10`.
+
+filetypes
+    A limit for each filetype, such as `{ lua = 120 }`. Default: `{}`.
+
+skip
+    Filetypes to leave alone.
+    Default: `{ "help", "qf", "man", "terminal", "prompt" }`.
+
+enabled
+    Set to `false` to keep the module off. Default: `true`.
+>lua
+    require("pantry").setup({
+      linelimit = {
+        near = 5,
+        filetypes = { lua = 120, markdown = 80 },
+      },
+    })
+<
+                                                 *pantry-linelimit-highlights*
+PantryLineLimit       The mark. Links to |hl-NonText|.
+PantryLineLimitOver   The `+N` count. Links to `DiagnosticVirtualTextWarn`.
+A colorscheme can set its own colors for both.
+
+                                                 *pantry.linelimit.enable()*
+                                                *pantry.linelimit.disable()*
+pantry.linelimit.enable()
+pantry.linelimit.disable()
+    Turn the module on or off. `setup` calls `enable()` unless `enabled` is
+    `false`.
+
  vim:tw=78:ts=8:ft=help:norl:

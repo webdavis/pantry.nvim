@@ -13,6 +13,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
   lazy = false,
   opts = {
     rsi = {},
+    linelimit = {},
   },
 }
 ```
@@ -25,6 +26,7 @@ never loads a module that you do not name.
 ```lua
 require("pantry").setup({
   rsi = {},
+  linelimit = {},
 })
 ```
 
@@ -94,6 +96,56 @@ require("pantry").setup({
   },
 })
 ```
+
+### linelimit
+
+`pantry.linelimit` shows how close each line is to a line length limit.
+
+- A faint `│` appears just after the limit on lines that are within `near` columns of it. Shorter
+  lines get nothing.
+- A line that goes past the limit gets `+N` after its end. N is how many columns it is over.
+- Text past the limit keeps its normal color.
+
+pantry checks only the lines on the screen. It counts width in screen columns, so a tab or a wide
+character counts as wide as it looks. Concealed text still counts.
+
+The limit for a window comes from the first of these that is set:
+
+1. The window's `colorcolumn`. pantry uses the first entry. `+1` means the limit is `textwidth`,
+   and `81` means the limit is 80.
+2. `textwidth`, when it is above 0.
+3. `max_line_length` from an EditorConfig file.
+4. The `filetypes` option.
+
+If none of these is set, the window shows nothing.
+
+While the module is on, pantry hides Neovim's own `colorcolumn` stripe in the windows it checks.
+It still uses the `colorcolumn` value as the limit. `disable()` puts the stripe back.
+
+pantry skips floating windows, buffers that have a `buftype` such as help or terminal buffers,
+and the filetypes in `skip`.
+
+| Option | Default | Meaning |
+|---|---|---|
+| `near` | `10` | How many columns before the limit a line starts to get the mark |
+| `filetypes` | `{}` | A limit for each filetype, such as `{ lua = 120 }` |
+| `skip` | `{ "help", "qf", "man", "terminal", "prompt" }` | Filetypes to leave alone |
+| `enabled` | `true` | Set to `false` to keep the module off |
+
+The mark uses the `PantryLineLimit` highlight, which links to `NonText`. The `+N` count uses
+`PantryLineLimitOver`, which links to `DiagnosticVirtualTextWarn`. A colorscheme can set its own
+colors for both.
+
+```lua
+require("pantry").setup({
+  linelimit = {
+    near = 5,
+    filetypes = { lua = 120, markdown = 80 },
+  },
+})
+```
+
+`require("pantry.linelimit").disable()` turns the module off, and `enable()` turns it back on.
 
 ## Development
 
