@@ -47,10 +47,10 @@ T["checkhealth pantry lists the modules that are on"] = function()
   eq(report:find("linelimit", 1, true) ~= nil, false)
 end
 
-T["checkhealth pantry says when no module is on"] = function()
+T["checkhealth pantry says when no jar is on"] = function()
   child.cmd("checkhealth pantry")
   local report = table.concat(child.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
-  eq(report:find("No modules are on", 1, true) ~= nil, true)
+  eq(report:find("No jars are on", 1, true) ~= nil, true)
 end
 
 return T

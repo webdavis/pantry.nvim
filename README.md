@@ -1,7 +1,8 @@
 # pantry.nvim
 
 pantry.nvim is a bundle of small Neovim jars. Each jar is off until you turn it on. pantry needs
-Neovim 0.12 or newer and has no dependencies, except the tree-sitter parsers that jumps uses.
+Neovim 0.12 or newer and has no dependencies, except the tree-sitter parsers that jumps and focus
+use.
 
 ## Install
 
@@ -16,7 +17,8 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 }
 ```
 
-Only jumps needs nvim-treesitter. Leave it out if you do not use jumps.
+jumps needs nvim-treesitter for its parsers, and focus uses them when they are there. Leave it
+out if you use neither.
 
 ## Setup
 
@@ -44,6 +46,8 @@ Run `:checkhealth pantry` to see which jars are on.
 - [rsi](docs/jars/rsi.md) adds readline editing keys to insert mode and the command line.
 - [linelimit](docs/jars/linelimit.md) marks lines that come close to a line length limit.
 - [jumps](docs/jars/jumps.md) adds keys that move the cursor by the structure of the code.
+- [focus](docs/jars/focus.md) dims every line outside the code around the cursor, with keys to
+  show more or less.
 
 ## Development
 
