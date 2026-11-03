@@ -28,6 +28,10 @@ local follow = function()
   })
 end
 
+M.is_enabled = function()
+  return on
+end
+
 M.enable = function()
   if on then
     return

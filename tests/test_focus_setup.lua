@@ -11,6 +11,11 @@ local mapped = function(lhs)
   return child.lua_get(('vim.fn.maparg(%q, "n", false, true).buffer == 1'):format(lhs))
 end
 
+local health = function()
+  child.cmd("checkhealth pantry")
+  return table.concat(child.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
+end
+
 T["the keys exist only while focus is on"] = function()
   child.lua([[require("pantry.focus").setup()]])
   eq({ mapped("<M-o>"), mapped("<M-i>") }, { false, false })
@@ -58,6 +63,13 @@ T["enabled = true turns focus on at setup"] = function()
   f.at(3)
   child.lua([[require("pantry").setup({ focus = { enabled = true } })]])
   eq(f.lit(), { 2, 3, 4 })
+end
+
+T["checkhealth pantry says focus is set up and off until it is enabled"] = function()
+  child.lua([[require("pantry").setup({ focus = {} })]])
+  eq(health():find("focus is set up and off", 1, true) ~= nil, true)
+  f.call("enable")
+  eq(health():find("focus is on", 1, true) ~= nil, true)
 end
 
 return T
