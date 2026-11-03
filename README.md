@@ -147,10 +147,74 @@ require("pantry").setup({
 
 `require("pantry.linelimit").disable()` turns the module off, and `enable()` turns it back on.
 
+### jumps
+
+`pantry.jumps` adds keys that move the cursor by the structure of the code. It reads the
+structure from Neovim's built-in tree-sitter, so a language needs a tree-sitter parser for the
+code keys to work. pantry does not install parsers.
+
+| Keys | Mode | Moves to |
+|---|---|---|
+| `{` and `}` | Normal | One block level out or in |
+| `]j` and `[j` | Normal, visual, operator-pending | The next or previous node at the same level |
+| `]r` and `[r` | Normal, visual, operator-pending | The next or previous return |
+| `]n` and `[n` | Normal | The next or previous merge-conflict marker |
+| `` ]` `` and `` [` `` | Normal, visual, operator-pending, markdown only | The next or previous fenced code block |
+| `]x` and `[x` | Normal, visual, operator-pending, markdown only | The next or previous checkbox |
+
+Every key takes a count, and every jump goes into the jump list, so `<C-o>` goes back.
+
+`{` goes to the first line of the block around the cursor. `2{` goes out two levels. `}` goes
+back down the levels that `{` came out of. If you move the cursor another way or edit the
+buffer first, `}` goes to the first block inside the block under the cursor. In a buffer with
+no parser, `{` and `}` keep their paragraph motion. Visual and operator-pending `{` and `}` always
+keep it.
+
+pantry takes the list of blocks from
+[nvim-treesitter-context](https://github.com/nvim-treesitter/nvim-treesitter-context) when it is
+installed. Without it, pantry has its own list for Lua, Python, JavaScript, TypeScript, Go,
+Rust, Swift, Bash, JSON, YAML, TOML and markdown.
+
+`]j` and `[j` skip over anything nested and stop at the ends of the block. In JSON, YAML and
+TOML they move between keys at one level and between the items of a list.
+
+`]r` and `[r` use the `@return.outer` captures from
+[nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects).
+pantry adds its own captures for three languages:
+
+- Rust: the last expression of a function body when it has no semicolon.
+- Swift: a `return`, and the single expression body of a function that declares a return
+  type. Closures are skipped.
+- Bash: a `return`, and an `echo` or `printf` that is the last command of a function, unless
+  it writes to stderr with `>&2`.
+
+pantry also makes Swift `let` and `var` declarations into `@assignment` text objects, so
+textobjects keys such as `]v` work on them.
+
+`]n` and `[n` stop on lines that start with `<<<<<<<`, `=======` or `>>>>>>>`.
+
+To turn off one key, set it to `false`:
+
+```lua
+require("pantry").setup({
+  jumps = {
+    keys = { ["]r"] = false },
+  },
+})
+```
+
 ## Development
 
 `make test` runs the tests with [mini.test](https://github.com/echasnovski/mini.nvim). It clones
 mini.nvim into `deps/` the first time. `make format` formats the Lua files with stylua.
+
+The jumps tests need tree-sitter parsers. By default they use the parsers in Neovim's data
+directory and the query files of nvim-treesitter-context and nvim-treesitter-textobjects from
+lazy.nvim. To use other directories, list them in `TS_DIRS`, separated by `:`:
+
+```sh
+make test TS_DIRS=~/parsers:~/queries
+```
 
 ## License
 
