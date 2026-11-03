@@ -1,0 +1,93 @@
+*pantry.txt*  Small Neovim modules in one plugin
+
+==============================================================================
+CONTENTS                                                     *pantry-contents*
+
+  1. Introduction ............................................... |pantry|
+  2. rsi .................................................... |pantry-rsi|
+
+==============================================================================
+INTRODUCTION                                                          *pantry*
+
+pantry.nvim is a set of small Neovim modules in one plugin. Each module is
+off until you turn it on. pantry.nvim needs Neovim 0.12 or newer.
+
+                                                              *pantry.setup()*
+pantry.setup({config})
+    Turns on each module named in {config}. The value for each name is the
+    options table for that module. A module with `enabled = false` stays
+    off. pantry never loads a module that {config} does not name.
+>lua
+    require("pantry").setup({
+      rsi = {},
+    })
+<
+Each module also has its own setup function, for example
+`require("pantry.rsi").setup({})`.
+
+Run `:checkhealth pantry` to see which modules are on.
+
+==============================================================================
+RSI                                                               *pantry-rsi*
+
+pantry.rsi adds readline editing keys to insert mode and the command line.
+These are the keys that shells such as bash use.
+
+Key            Insert mode                      Command line ~
+<C-a>          first non-blank character        start
+<C-e>          end of line                      Neovim's own
+<C-b>          left one character               left one character
+<C-f>          right one character              right one character
+<C-d>          delete character                 delete character
+<C-k>          kill to end of line              kill to end
+<C-u>          kill to first non-blank          kill to start
+<C-w>          kill back to previous space      kill back to previous space
+<M-p>          kill back one path segment       kill back one path segment
+<C-t>          Neovim's own                     swap characters
+<C-y>          Neovim's own                     paste latest kill
+<M-y>                                           after <C-y>: older kill
+<M-b>          back one word                    back one word
+<M-f>          forward one word                 forward one word
+<M-d>          kill next word                   kill next word
+<M-BS>         kill previous word               kill previous word
+<M-C-h>        kill previous word               kill previous word
+<M-u>          uppercase next word              uppercase next word
+<M-l>          lowercase next word              lowercase next word
+<M-c>          capitalize next word             capitalize next word
+<M-.>                                           last argument of an
+                                                earlier command
+
+At the end of a line these keys keep Neovim's own meaning:
+- <C-d> removes one indent level in insert mode and lists completions on
+  the command line.
+- <C-f> keeps Neovim's insert-mode meaning and opens the command-line
+  window on the command line.
+- Insert-mode <C-e> inserts the character below the cursor.
+On a search line (`/` or `?`), <C-t> keeps Neovim's meaning.
+
+                                                         *pantry-rsi-killring*
+A kill deletes text and saves it in the kill ring. Kills do not change any
+register. <C-y> pastes the latest kill on the command line. Pressing <M-y>
+right after <C-y> replaces the pasted text with the next older kill.
+Pressing <M-.> again replaces the inserted argument with the last argument
+of the command before it.
+
+Insert-mode keys stay inside insert mode, so |.| repeats the whole insert and
+one |u| undoes it.
+
+While a completion menu is open, <C-e>, <C-k> and <C-y> go to the menu.
+pantry checks blink.cmp when it is loaded. Otherwise it checks Neovim's
+built-in popup menu.
+
+                                                          *pantry-rsi-options*
+keys
+    A table of keys to turn off. Set a key to `false` to keep Neovim's own
+    meaning for it in both modes.
+>lua
+    require("pantry").setup({
+      rsi = {
+        keys = { ["<C-k>"] = false },
+      },
+    })
+<
+ vim:tw=78:ts=8:ft=help:norl:

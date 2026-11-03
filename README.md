@@ -1,0 +1,105 @@
+# pantry.nvim
+
+pantry.nvim is a set of small Neovim modules in one plugin. Each module is off until you turn
+it on. pantry.nvim needs Neovim 0.12 or newer and has no other dependencies.
+
+## Install
+
+With [lazy.nvim](https://github.com/folke/lazy.nvim):
+
+```lua
+{
+  "webdavis/pantry.nvim",
+  lazy = false,
+  opts = {
+    rsi = {},
+  },
+}
+```
+
+## Setup
+
+Name a module in `setup` to turn it on. Pass `{ enabled = false }` to keep a module off. pantry
+never loads a module that you do not name.
+
+```lua
+require("pantry").setup({
+  rsi = {},
+})
+```
+
+Each module also works on its own:
+
+```lua
+require("pantry.rsi").setup({})
+```
+
+Run `:checkhealth pantry` to see which modules are on.
+
+## Modules
+
+### rsi
+
+`pantry.rsi` adds readline editing keys to insert mode and the command line. These are the keys
+that shells such as bash use. It replaces [vim-rsi](https://github.com/tpope/vim-rsi).
+
+| Key | Insert mode | Command line |
+|---|---|---|
+| `<C-a>` | Go to the first non-blank character | Go to the start |
+| `<C-e>` | Go to the end of the line | Neovim's own |
+| `<C-b>` | Go left one character | Go left one character |
+| `<C-f>` | Go right one character | Go right one character |
+| `<C-d>` | Delete the character under the cursor | Delete the character under the cursor |
+| `<C-k>` | Kill to the end of the line | Kill to the end |
+| `<C-u>` | Kill back to the first non-blank character | Kill to the start |
+| `<C-w>` | Kill back to the previous space | Kill back to the previous space |
+| `<M-p>` | Kill back one path segment, up to the previous `/` or space | Kill back one path segment, up to the previous `/` or space |
+| `<C-t>` | Neovim's own | Swap the two characters around the cursor |
+| `<C-y>` | Neovim's own | Paste the latest kill |
+| `<M-y>` | | After `<C-y>`, replace the paste with the next older kill |
+| `<M-b>` | Go back one word | Go back one word |
+| `<M-f>` | Go forward one word | Go forward one word |
+| `<M-d>` | Kill the next word | Kill the next word |
+| `<M-BS>`, `<M-C-h>` | Kill the previous word | Kill the previous word |
+| `<M-u>` | Uppercase the next word | Uppercase the next word |
+| `<M-l>` | Lowercase the next word | Lowercase the next word |
+| `<M-c>` | Capitalize the next word | Capitalize the next word |
+| `<M-.>` | | Insert the last argument of the previous command. Press it again for older commands |
+
+Some keys keep Neovim's own meaning in certain places:
+
+- At the end of a line, `<C-d>` removes one indent level in insert mode and lists completions on
+  the command line.
+- At the end of a line, `<C-f>` keeps Neovim's insert-mode meaning. On the command line it opens
+  the command-line window.
+- At the end of a line, insert-mode `<C-e>` inserts the character below the cursor.
+- On a search line (`/` or `?`), `<C-t>` keeps Neovim's meaning.
+
+A kill deletes text and saves it in a list called the kill ring. `<C-k>`, `<C-u>`, `<C-w>`, `<M-p>`,
+`<M-d>`, `<M-BS>` and `<M-C-h>` kill text in both modes. `<C-y>` pastes the latest kill on the
+command line. Kills do not change any register.
+
+Insert-mode keys stay inside insert mode. `.` repeats the whole insert, and one `u` undoes it.
+
+While a completion menu is open, `<C-e>`, `<C-k>` and `<C-y>` go to the menu. pantry checks
+[blink.cmp](https://github.com/Saghen/blink.cmp) when it is loaded. Otherwise it checks
+Neovim's built-in popup menu.
+
+To turn off one key, set it to `false`:
+
+```lua
+require("pantry").setup({
+  rsi = {
+    keys = { ["<C-k>"] = false },
+  },
+})
+```
+
+## Development
+
+`make test` runs the tests with [mini.test](https://github.com/echasnovski/mini.nvim). It clones
+mini.nvim into `deps/` the first time. `make format` formats the Lua files with stylua.
+
+## License
+
+MIT
