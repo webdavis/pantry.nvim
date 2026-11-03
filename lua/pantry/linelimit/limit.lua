@@ -1,5 +1,7 @@
+local window = require("pantry.linelimit.window")
+
 local from_colorcolumn = function(win, buf)
-  local first = vim.split(vim.wo[win].colorcolumn, ",")[1]
+  local first = vim.split(window.colorcolumn(win), ",")[1]
   local column = tonumber(first)
   if not column then
     return nil
