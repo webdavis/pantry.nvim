@@ -1,5 +1,11 @@
 return {
   {
+    keys = { next = "}", prev = "{" },
+    desc = { next = "One block level in", prev = "One block level out" },
+    modes = { "n" },
+    find = require("pantry.jumps.levels").find,
+  },
+  {
     keys = { next = "]r", prev = "[r" },
     desc = { next = "Next return", prev = "Previous return" },
     modes = { "n", "x", "o" },
