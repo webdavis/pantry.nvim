@@ -1,5 +1,6 @@
 local measure = require("pantry.linelimit.measure")
 local limit = require("pantry.linelimit.limit")
+local window = require("pantry.linelimit.window")
 
 local M = {}
 
@@ -25,8 +26,9 @@ end
 M.attach = function(opts)
   vim.api.nvim_set_decoration_provider(ns, {
     on_win = function(_, win, buf)
-      local max = limit(win, buf, opts)
+      local max = window.managed(win, opts) and limit(win, buf, opts)
       views[win] = max and { limit = max, leftcol = vim.fn.getwininfo(win)[1].leftcol, tabstop = vim.bo[buf].tabstop }
+        or nil
       return views[win] ~= nil
     end,
     on_line = function(_, win, buf, row)
