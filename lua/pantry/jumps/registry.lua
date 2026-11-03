@@ -6,6 +6,12 @@ return {
     find = require("pantry.jumps.levels").find,
   },
   {
+    keys = { next = "]j", prev = "[j" },
+    desc = { next = "Next node at this level", prev = "Previous node at this level" },
+    modes = { "n", "x", "o" },
+    find = require("pantry.jumps.siblings").find,
+  },
+  {
     keys = { next = "]r", prev = "[r" },
     desc = { next = "Next return", prev = "Previous return" },
     modes = { "n", "x", "o" },
