@@ -73,4 +73,32 @@ Helpers.jumping = function(child)
   return j
 end
 
+Helpers.focusing = function(child)
+  local f = {}
+  f.open = function(filetype, lines)
+    child.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    child.bo.filetype = filetype
+    child.cmd("syntax off")
+    child.lua("vim.treesitter.stop()")
+  end
+  f.at = function(row)
+    child.api.nvim_win_set_cursor(0, { row, 0 })
+  end
+  f.call = function(name)
+    child.lua(('require("pantry.focus").%s()'):format(name))
+  end
+  f.lit = function()
+    child.cmd("redraw")
+    local attrs = child.get_screenshot().attr
+    local rows = {}
+    for row = 1, child.api.nvim_buf_line_count(0) do
+      if attrs[row][1] == attrs[row][#attrs[row]] then
+        table.insert(rows, row)
+      end
+    end
+    return rows
+  end
+  return f
+end
+
 return Helpers
