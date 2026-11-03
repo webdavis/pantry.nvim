@@ -1,4 +1,4 @@
-*pantry.txt*  Small Neovim modules in one plugin
+*pantry.txt*  A bundle of small Neovim jars
 
 ==============================================================================
 CONTENTS                                                     *pantry-contents*
@@ -12,24 +12,24 @@ CONTENTS                                                     *pantry-contents*
 ==============================================================================
 INTRODUCTION                                                          *pantry*
 
-pantry.nvim is a set of small Neovim modules in one plugin. Each module is
-off until you turn it on. pantry.nvim needs Neovim 0.12 or newer.
+pantry.nvim is a bundle of small Neovim jars. Each jar is off until you
+turn it on. pantry.nvim needs Neovim 0.12 or newer.
 
                                                               *pantry.setup()*
 pantry.setup({config})
-    Turns on each module named in {config}. The value for each name is the
-    options table for that module. A module with `enabled = false` stays
-    off. pantry never loads a module that {config} does not name.
+    Turns on each jar named in {config}. The value for each name is the
+    options table for that jar. A jar with `enabled = false` stays off.
+    pantry never loads a jar that {config} does not name.
 >lua
     require("pantry").setup({
       rsi = {},
       linelimit = {},
     })
 <
-Each module also has its own setup function, for example
+Each jar also has its own setup function, for example
 `require("pantry.rsi").setup({})`.
 
-Run `:checkhealth pantry` to see which modules are on.
+Run `:checkhealth pantry` to see which jars are on.
 
 ==============================================================================
 RSI                                                               *pantry-rsi*
@@ -118,7 +118,7 @@ The limit for a window comes from the first of these that is set:
 4. The `filetypes` option.
 If none of these is set, the window shows nothing.
 
-While the module is on, pantry hides Neovim's own 'colorcolumn' stripe in
+While the jar is on, pantry hides Neovim's own 'colorcolumn' stripe in
 the windows it checks. It still uses the 'colorcolumn' value as the limit.
 |pantry.linelimit.disable()| puts the stripe back.
 
@@ -138,7 +138,7 @@ skip
     Default: `{ "help", "qf", "man", "terminal", "prompt" }`.
 
 enabled
-    Set to `false` to keep the module off. Default: `true`.
+    Set to `false` to keep the jar off. Default: `true`.
 >lua
     require("pantry").setup({
       linelimit = {
@@ -156,7 +156,7 @@ A colorscheme can set its own colors for both.
                                                 *pantry.linelimit.disable()*
 pantry.linelimit.enable()
 pantry.linelimit.disable()
-    Turn the module on or off. `setup` calls `enable()` unless `enabled` is
+    Turn the jar on or off. `setup` calls `enable()` unless `enabled` is
     `false`.
 
 JUMPS                                                           *pantry-jumps*
@@ -170,11 +170,11 @@ Keys        Modes                Moves to ~
 ]j [j       normal, visual, op   next or previous node at the same level
 ]r [r       normal, visual, op   next or previous return
 ]n [n       normal               next or previous merge-conflict marker
-]` [`       markdown only        next or previous fenced code block
-]x [x       markdown only        next or previous checkbox
+]` [`       normal, visual, op   next or previous fenced code block
+]x [x       normal, visual, op   next or previous checkbox
 
-Every key takes a count. Every jump goes into the |jumplist|, so |CTRL-O|
-goes back.
+]` [` ]x and [x work only in markdown buffers. Every key takes a count. A
+jump from normal mode goes into the |jumplist|, so |CTRL-O| goes back.
 
                                                      *pantry-jumps-levels*
 { goes to the first line of the block around the cursor. 2{ goes out two
