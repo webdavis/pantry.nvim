@@ -1,9 +1,10 @@
+local keys = require("pantry.focus.keys")
 local provider = require("pantry.focus.provider")
 local view = require("pantry.focus.view")
 
 local M = {}
 
-local config = { enabled = false }
+local config = { keys = {}, enabled = false }
 local on = false
 local group = "pantry.focus"
 
@@ -19,6 +20,12 @@ local follow = function()
       view.refresh(vim.api.nvim_get_current_win())
     end,
   })
+  vim.api.nvim_create_autocmd("BufEnter", {
+    group = id,
+    callback = function(event)
+      keys.map(event.buf, config)
+    end,
+  })
 end
 
 M.enable = function()
@@ -29,6 +36,7 @@ M.enable = function()
   view.reset()
   provider.attach()
   follow()
+  keys.map(vim.api.nvim_get_current_buf(), config)
   vim.api.nvim__redraw({ valid = false })
 end
 
@@ -39,6 +47,7 @@ M.disable = function()
   on = false
   provider.detach()
   vim.api.nvim_create_augroup(group, {})
+  keys.unmap_all()
   vim.api.nvim__redraw({ valid = false })
 end
 
