@@ -7,17 +7,9 @@ local registry = {
 
 local mapped = {}
 
-local turned_off = function(opts)
-  local off = {}
-  for lhs, on in pairs(opts.keys or {}) do
-    off[vim.keycode(lhs)] = on == false
-  end
-  return off
-end
-
 M.map = function(buf, opts)
   mapped[buf] = true
-  local off = turned_off(opts)
+  local off = require("pantry.keys").turned_off(opts)
   for _, key in ipairs(registry) do
     if not off[vim.keycode(key.lhs)] then
       vim.keymap.set("n", key.lhs, function()
