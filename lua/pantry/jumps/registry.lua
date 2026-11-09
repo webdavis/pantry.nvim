@@ -23,4 +23,10 @@ return {
     modes = { "n" },
     find = require("pantry.jumps.conflicts").find,
   },
+  {
+    keys = { next = "]P", prev = "[P" },
+    desc = { next = "Next paragraph", prev = "Previous paragraph" },
+    modes = { "n", "x", "o" },
+    move = require("pantry.jumps.paragraphs").move,
+  },
 }

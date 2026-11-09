@@ -1,11 +1,10 @@
 local blocks = require("pantry.jumps.blocks")
+local paragraphs = require("pantry.jumps.paragraphs")
 local treesitter = require("pantry.jumps.treesitter")
 
 local M = {}
 
 local history = {}
-
-local paragraph = { [1] = "}", [-1] = "{" }
 
 local remembered = function(buf, row)
   local last = history[buf]
@@ -47,7 +46,7 @@ end
 
 M.find = function(buf, cursor, direction, count)
   if not treesitter.root(buf) then
-    vim.cmd(("normal! %d%s"):format(count, paragraph[direction]))
+    paragraphs.move(direction, count)
     return nil
   end
   local ranges = blocks.ranges(buf)
