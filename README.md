@@ -56,11 +56,11 @@ Run `:checkhealth pantry` to see which jars are on.
 
 ## Development
 
-`make test` runs the tests with [mini.test](https://github.com/echasnovski/mini.nvim). The first
+`just test` runs the tests with [mini.test](https://github.com/echasnovski/mini.nvim). The first
 run clones mini.nvim, nvim-treesitter, nvim-treesitter-context and nvim-treesitter-textobjects
 into `deps/` and builds the tree-sitter parsers the tests use there. Building the parsers needs
 the `tree-sitter` CLI and a C compiler. The tests run with their own Neovim data directory under
-`deps/`, so your own parsers and plugins are never used. `make format` formats the Lua files
+`deps/`, so your own parsers and plugins are never used. `just format` formats the Lua files
 with stylua.
 
 ## License
