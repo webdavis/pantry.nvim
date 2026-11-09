@@ -1,5 +1,6 @@
 local find = require("pantry.markdown.find")
 local jump = require("pantry.markdown.jump")
+local toggle = require("pantry.markdown.toggle")
 
 local motion = { "n", "x", "o" }
 
@@ -8,4 +9,5 @@ return {
   { lhs = "[x", modes = motion, desc = "Previous checkbox", action = jump.to(find.checkboxes, -1) },
   { lhs = "]`", modes = motion, desc = "Next code block", action = jump.to(find.fences, 1) },
   { lhs = "[`", modes = motion, desc = "Previous code block", action = jump.to(find.fences, -1) },
+  { lhs = "<C-CR>", modes = { "n", "i" }, desc = "Toggle task", action = toggle },
 }
