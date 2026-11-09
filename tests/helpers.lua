@@ -57,6 +57,10 @@ Helpers.jumps_child = function()
   return Helpers.new_child([[require("pantry.jumps").setup()]])
 end
 
+Helpers.markdown_child = function()
+  return Helpers.new_child([[require("pantry.markdown").setup()]])
+end
+
 Helpers.jumping = function(child)
   local j = {}
   j.open = function(filetype, lines)
