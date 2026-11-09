@@ -171,6 +171,18 @@ Keys        Modes                Moves to ~
 {  }        normal               one block level out or in
 ]j [j       normal, visual, op   next or previous node at the same level
 ]r [r       normal, visual, op   next or previous return
+]c [c       normal, visual, op   next or previous class start, or change in a diff window
+]C [C       normal, visual, op   next or previous class end
+]m [m       normal, visual, op   next or previous function start
+]M [M       normal, visual, op   next or previous function end
+]l [l       normal, visual, op   next or previous loop start
+]L [L       normal, visual, op   next or previous loop end
+]s [s       normal, visual, op   next or previous local scope
+]z [z       normal, visual, op   next or previous fold
+]k [k       normal, visual, op   next or previous conditional
+]v [v       normal, visual, op   next or previous assignment
+], [,       normal, visual, op   next or previous argument
+]3 [3       normal, visual, op   next or previous comment
 ]n [n       normal               next or previous merge-conflict marker
 ]E [E       normal               next or previous diagnostic error
 ]W [W       normal               next or previous diagnostic warning
