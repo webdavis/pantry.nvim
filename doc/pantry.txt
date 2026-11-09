@@ -163,16 +163,18 @@ pantry.linelimit.disable()
 
 JUMPS                                                           *pantry-jumps*
 
-pantry.jumps adds keys that move the cursor by the structure of the code. It
-reads the structure from Neovim's built-in |treesitter|, so a language needs
-a tree-sitter parser for the code keys to work.
+pantry.jumps adds keys that move to the next or previous thing: a block, a
+node, a function, a class, a diagnostic, a merge-conflict marker, a
+paragraph, or a file in the same folder. The code keys read the structure
+from Neovim's built-in |treesitter|, so a language needs a tree-sitter
+parser for them to work.
 
 Keys        Modes                Moves to ~
 {  }        normal               one block level out or in
 ]j [j       normal, visual, op   next or previous node at the same level
 ]r [r       normal, visual, op   next or previous return
 [[          normal               up to the nvim-treesitter-context header
-]c [c       normal, visual, op   next or previous class start, or change in a diff window
+]c [c       normal, visual, op   next or previous class start or change
 ]C [C       normal, visual, op   next or previous class end
 ]m [m       normal, visual, op   next or previous function start
 ]M [M       normal, visual, op   next or previous function end
@@ -187,12 +189,19 @@ Keys        Modes                Moves to ~
 ]n [n       normal               next or previous merge-conflict marker
 ]E [E       normal               next or previous diagnostic error
 ]W [W       normal               next or previous diagnostic warning
+]P [P       normal, visual, op   next or previous paragraph
 ]f [f       normal               next or previous file in the folder
-]P [P       normal, visual, op   next or previous paragraph, like } and {
 
 Every key takes a count. A jump from normal mode goes into the |jumplist|,
 so |CTRL-O| goes back. The markdown keys ]` [` ]x and [x moved to the
 markdown jar.
+
+These keys replace Neovim's own |]f| |[f| |]P| |[P| |]s| |[s| |]z| |[z| |]l|
+|[l| |]L| |[L| |]m| |[m| |]M| |[M| and |[[|. ]c and [c keep Neovim's
+meaning in a diff window. Set a key to `false` in `keys` to keep Neovim's
+meaning. A buffer-local mapping still wins over jumps. Some filetype
+plugins, such as Python's, map ]m [m ]M [M and [[ in each buffer. Set
+|g:no_plugin_maps| before they load to stop them.
 
                                                      *pantry-jumps-levels*
 { goes to the first line of the block around the cursor. 2{ goes out two
@@ -224,6 +233,56 @@ objects, so textobjects keys such as ]v work on them.
 
 ]n and [n stop on lines that start with <<<<<<<, |||||||, ======= or
 >>>>>>>.
+
+                                                *pantry-jumps-textobjects*
+These keys call the move functions of nvim-treesitter-textobjects. Without
+the plugin they stay put.
+
+Keys    Function                  Captures ~
+]c [c   goto_next/previous_start  @class.outer @class.inner
+]C [C   goto_next/previous_end    @class.outer @class.inner
+]m [m   goto_next/previous_start  @function.outer @function.inner
+]M [M   goto_next/previous_end    @function.outer @function.inner
+]l [l   goto_next/previous_start  @loop.outer @loop.inner
+]L [L   goto_next/previous_end    @loop.outer @loop.inner
+]s [s   goto_next/previous        @local.scope in the locals group
+]z [z   goto_next/previous        @fold in the folds group
+]k [k   goto_next/previous        @conditional.outer @conditional.inner
+]v [v   goto_next/previous_start  @assignment.outer
+], [,   goto_next/previous_start  @parameter.inner
+]3 [3   goto_next/previous_start  @comment.outer
+
+The query group is textobjects unless the table names another. In a diff
+window, ]c and [c run Neovim's own |]c| and |[c|. In operator-pending mode
+the plugin makes the move include the character it lands on.
+
+                                                    *pantry-jumps-context*
+[[ goes to the header line that nvim-treesitter-context shows above the
+cursor. 2[[ goes up two headers. Without the plugin [[ stays put. ]] keeps
+Neovim's meaning.
+
+                                                *pantry-jumps-diagnostics*
+]E and [E stop only on errors. ]W and [W stop only on warnings.
+
+                                                 *pantry-jumps-paragraphs*
+]P and [P run Neovim's } and { paragraph motions in every mode, because {
+and } are block level jumps in normal mode.
+
+                                                      *pantry-jumps-files*
+]f and [f open the next or previous file in the folder of the current
+file. In an unnamed buffer they use the current directory.
+- Names sort with digits compared as numbers, so test2 comes before test10.
+- Images, PDFs, archives, audio, video, fonts, lock files, swap files,
+  .DS_Store, lazy-lock.json, package-lock.json and pnpm-lock.yaml are
+  skipped.
+- Files that git ignores are skipped. Outside a git repository, no file is
+  skipped for this.
+- Folders are skipped. Links to files are kept.
+- A buffer whose file is not in the list sits between the names that sort
+  around it.
+- A jump past either end stops at the first or last file.
+Each jump shows the position and the name, such as `4/12 init.lua`. A jump
+that cannot go further adds `(first file)` or `(last file)`.
 
                                                      *pantry-jumps-options*
 keys

@@ -45,7 +45,8 @@ Run `:checkhealth pantry` to see which jars are on.
 
 - [rsi](docs/jars/rsi.md) adds readline editing keys to insert mode and the command line.
 - [linelimit](docs/jars/linelimit.md) marks lines that come close to a line length limit.
-- [jumps](docs/jars/jumps.md) adds keys that move the cursor by the structure of the code.
+- [jumps](docs/jars/jumps.md) adds keys that move to the next or previous block, function,
+  diagnostic, merge-conflict marker, paragraph, or file in the folder.
 - [focus](docs/jars/focus.md) dims every line outside the code around the cursor, with keys to
   show more or less.
 - [markdown](docs/jars/markdown.md) toggles Markdown tasks and moves between checkboxes and code
