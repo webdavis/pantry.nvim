@@ -48,6 +48,8 @@ Run `:checkhealth pantry` to see which jars are on.
 - [jumps](docs/jars/jumps.md) adds keys that move the cursor by the structure of the code.
 - [focus](docs/jars/focus.md) dims every line outside the code around the cursor, with keys to
   show more or less.
+- [messages](docs/jars/messages.md) turns on Neovim's ui2 message window and lists every message on
+  `<leader>nh`.
 
 ## Development
 

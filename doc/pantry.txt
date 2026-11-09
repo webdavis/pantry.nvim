@@ -8,6 +8,7 @@ CONTENTS                                                     *pantry-contents*
   3. linelimit ........................................ |pantry-linelimit|
   4. jumps ................................................ |pantry-jumps|
   5. focus ................................................ |pantry-focus|
+  6. messages .......................................... |pantry-messages|
 
 ==============================================================================
 INTRODUCTION                                                          *pantry*
@@ -278,4 +279,51 @@ enabled
 PantryFocusDim   The dimmed lines. Links to |hl-Comment|.
 A colorscheme can set its own color for it.
 
+==============================================================================
+MESSAGES                                                     *pantry-messages*
+
+pantry.messages turns on Neovim's ui2 message window and adds a key that
+lists every message since startup. The jar is off until you turn it on.
+
+At setup the jar runs `require("vim._core.ui2").enable()` with
+`{ msg = { target = "msg" } }`. ui2 then shows every message, notifications
+included, in the message window.
+
+ui2 is private Neovim API, and a Neovim release can change or remove it. The
+jar reads each message from ui2's `msg_show` handler to record its time,
+level and kind. When that handler is missing, the jar records nothing and
+every message still shows. The history then lists the lines of |:messages|
+with no time and no kind.
+
+Key          Mode     Action ~
+<leader>nh   normal   show the message history, newest first
+
+The snacks view opens a snacks.nvim picker laid out like the snacks
+notifications picker. The buffer view opens a read-only buffer in a split,
+one line per message with its time, level and kind. A message of several
+lines continues on indented lines. `q` closes the buffer. The level is
+`error` for errors, `warn` for warnings and `info` for every other message.
+
+                                                  *pantry-messages-options*
+ui2
+    Set to `false` to leave ui2 alone. Set to a table to pass it to ui2 as
+    its options. Default: `true`.
+
+view
+    `"snacks"`, `"buffer"`, or `"auto"`. `"auto"` uses snacks when it loads
+    and the buffer view otherwise. Default: `"auto"`.
+
+keys
+    Maps each key to an action. Set a key to `false` to leave it unmapped.
+    Default: `{ ["<leader>nh"] = "history" }`.
+    The actions are `"history"`, which uses `view`, `"history_buffer"` and
+    `"history_snacks"`.
+>lua
+    require("pantry").setup({
+      messages = {
+        view = "buffer",
+        keys = { ["<leader>sm"] = "history_snacks" },
+      },
+    })
+<
  vim:tw=78:ts=8:ft=help:norl:
