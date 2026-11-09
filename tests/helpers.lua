@@ -101,4 +101,19 @@ Helpers.focusing = function(child)
   return f
 end
 
+Helpers.messaging = function(child)
+  local m = {}
+  m.with_ui = function()
+    child.lua([[vim.api.nvim_list_uis = function() return { {} } end]])
+  end
+  m.setup = function(opts)
+    child.lua("require('pantry').setup({ messages = ... })", { opts or {} })
+  end
+  m.history = function()
+    child.type_keys("<Bslash>nh")
+    return child.api.nvim_buf_get_lines(0, 0, -1, false)
+  end
+  return m
+end
+
 return Helpers
