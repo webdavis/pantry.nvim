@@ -64,6 +64,12 @@ return {
     modes = { "n" },
     move = require("pantry.jumps.files").move,
   },
+  {
+    keys = { prev = "[[" },
+    desc = { prev = "Up to the context header" },
+    modes = { "n" },
+    move = require("pantry.jumps.context").move,
+  },
   textobject("]c", "[c", "class start or diff change", textobjects.class_starts_or_changes),
   textobject("]C", "[C", "class end", mover("_end", class)),
   textobject("]m", "[m", "function start", mover("_start", func)),

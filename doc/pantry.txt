@@ -171,6 +171,7 @@ Keys        Modes                Moves to ~
 {  }        normal               one block level out or in
 ]j [j       normal, visual, op   next or previous node at the same level
 ]r [r       normal, visual, op   next or previous return
+[[          normal               up to the nvim-treesitter-context header
 ]c [c       normal, visual, op   next or previous class start, or change in a diff window
 ]C [C       normal, visual, op   next or previous class end
 ]m [m       normal, visual, op   next or previous function start
