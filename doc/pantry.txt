@@ -205,7 +205,8 @@ pantry adds its own captures for three languages:
 pantry also makes Swift let and var declarations into @assignment text
 objects, so textobjects keys such as ]v work on them.
 
-]n and [n stop on lines that start with <<<<<<<, ======= or >>>>>>>.
+]n and [n stop on lines that start with <<<<<<<, |||||||, ======= or
+>>>>>>>.
 
                                                      *pantry-jumps-options*
 keys

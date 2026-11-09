@@ -2,7 +2,7 @@ local rows = require("pantry.jumps.rows")
 
 local M = {}
 
-local markers = { "^<<<<<<<", "^=======", "^>>>>>>>" }
+local markers = { "^<<<<<<<", "^|||||||", "^=======", "^>>>>>>>" }
 
 local is_marker = function(line)
   for _, marker in ipairs(markers) do
