@@ -41,4 +41,10 @@ return {
     modes = { "n" },
     move = require("pantry.jumps.diagnostics").warnings,
   },
+  {
+    keys = { next = "]f", prev = "[f" },
+    desc = { next = "Next file in folder", prev = "Previous file in folder" },
+    modes = { "n" },
+    move = require("pantry.jumps.files").move,
+  },
 }
