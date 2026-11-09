@@ -172,11 +172,10 @@ Keys        Modes                Moves to ~
 ]j [j       normal, visual, op   next or previous node at the same level
 ]r [r       normal, visual, op   next or previous return
 ]n [n       normal               next or previous merge-conflict marker
-]` [`       normal, visual, op   next or previous fenced code block
-]x [x       normal, visual, op   next or previous checkbox
 
-]` [` ]x and [x work only in markdown buffers. Every key takes a count. A
-jump from normal mode goes into the |jumplist|, so |CTRL-O| goes back.
+Every key takes a count. A jump from normal mode goes into the |jumplist|,
+so |CTRL-O| goes back. The markdown keys ]` [` ]x and [x moved to the
+markdown jar.
 
                                                      *pantry-jumps-levels*
 { goes to the first line of the block around the cursor. 2{ goes out two

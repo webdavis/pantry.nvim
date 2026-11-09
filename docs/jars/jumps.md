@@ -30,11 +30,9 @@ jumps needs nvim-treesitter to install parsers. The other two plugins are option
 | `]j` and `[j` | Normal, visual, operator-pending | The next or previous node at the same level |
 | `]r` and `[r` | Normal, visual, operator-pending | The next or previous return |
 | `]n` and `[n` | Normal | The next or previous merge-conflict marker |
-| `` ]` `` and `` [` `` | Normal, visual, operator-pending | The next or previous code block |
-| `]x` and `[x` | Normal, visual, operator-pending | The next or previous checkbox |
 
-A merge-conflict marker is a line that starts with `<<<<<<<`, `=======`, or `>>>>>>>`. The last
-two rows work only in markdown buffers. Every key takes a count. A jump from normal mode goes into
+A merge-conflict marker is a line that starts with `<<<<<<<`, `=======`, or `>>>>>>>`. Every key
+takes a count. A jump from normal mode goes into
 the jump list, so `<C-o>` goes back.
 
 ## Move between block levels
@@ -60,10 +58,11 @@ its own captures for three languages:
 - Bash: a `return`, and an `echo` or `printf` that is the last command of a function, unless it
   writes to stderr with `>&2`.
 
-## Move through markdown
+## Markdown keys
 
-`` ]` `` and `` [` `` stop on the first line of each fenced code block. `]x` and `[x` stop on each
-checkbox, checked or not, and skip text inside code blocks.
+The code block keys `` ]` `` and `` [` `` and the checkbox keys `]x` and `[x` now live in the
+[markdown](markdown.md) jar. `jumps = { keys = { ["]x"] = false } }` becomes
+`markdown = { keys = { ["]x"] = false } }`.
 
 ## Swift assignments
 
