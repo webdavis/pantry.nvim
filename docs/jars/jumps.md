@@ -31,8 +31,8 @@ jumps needs nvim-treesitter to install parsers. The other two plugins are option
 | `]r` and `[r` | Normal, visual, operator-pending | The next or previous return |
 | `]n` and `[n` | Normal | The next or previous merge-conflict marker |
 
-A merge-conflict marker is a line that starts with `<<<<<<<`, `=======`, or `>>>>>>>`. Every key
-takes a count. A jump from normal mode goes into
+A merge-conflict marker is a line that starts with `<<<<<<<`, `|||||||`, `=======`, or `>>>>>>>`.
+Every key takes a count. A jump from normal mode goes into
 the jump list, so `<C-o>` goes back.
 
 ## Move between block levels

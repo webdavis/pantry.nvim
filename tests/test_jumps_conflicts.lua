@@ -49,6 +49,14 @@ T["<C-o> returns to where ]n started"] = function()
   eq(j.press("<C-o>"), 1)
 end
 
+T["]n stops on the zdiff3 base marker"] = function()
+  j.open("text", { "a", "<<<<<<< HEAD", "ours", "||||||| base", "old", "=======", "theirs", ">>>>>>> branch" })
+  j.at(2)
+  eq(j.press("]n"), 4)
+  eq(j.press("]n"), 6)
+  eq(j.press("[n"), 4)
+end
+
 T["markers that do not start the line are ignored"] = function()
   j.open("text", { "a", "  <<<<<<< HEAD", "b", ">>>>>>> branch" })
   j.at(1)
