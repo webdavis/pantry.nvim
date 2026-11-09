@@ -32,6 +32,7 @@ jumps needs nvim-treesitter to install parsers. The other two plugins are option
 | `]n` and `[n` | Normal | The next or previous merge-conflict marker |
 | `]E` and `[E` | Normal | The next or previous diagnostic error |
 | `]W` and `[W` | Normal | The next or previous diagnostic warning |
+| `]f` and `[f` | Normal | The next or previous file in the current file's folder |
 | `]P` and `[P` | Normal, visual, operator-pending | The next or previous paragraph, like `}` and `{` |
 
 A merge-conflict marker is a line that starts with `<<<<<<<`, `|||||||`, `=======`, or `>>>>>>>`.
