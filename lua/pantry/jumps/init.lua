@@ -4,6 +4,9 @@ local directions = { next = 1, prev = -1 }
 
 local map = function(kind, way)
   vim.keymap.set(kind.modes, kind.keys[way], function()
+    if kind.move then
+      return kind.move(directions[way], vim.v.count1)
+    end
     local buf = vim.api.nvim_get_current_buf()
     local row = kind.find(buf, vim.api.nvim_win_get_cursor(0), directions[way], vim.v.count1)
     if row then

@@ -28,6 +28,12 @@ T["a key set to false leaves its partner on"] = function()
   eq(j.press("[n"), 2)
 end
 
+T["a key that moves by itself turns off the same way"] = function()
+  child.lua([[require("pantry.jumps").setup({ keys = { ["]P"] = false } })]])
+  eq(child.fn.maparg("]P", "n"), "")
+  eq(child.fn.maparg("[P", "n") ~= "", true)
+end
+
 T["checkhealth pantry lists jumps"] = function()
   child.lua([[require("pantry").setup({ jumps = {} })]])
   child.cmd("checkhealth pantry")
