@@ -29,4 +29,16 @@ return {
     modes = { "n", "x", "o" },
     move = require("pantry.jumps.paragraphs").move,
   },
+  {
+    keys = { next = "]E", prev = "[E" },
+    desc = { next = "Next error", prev = "Previous error" },
+    modes = { "n" },
+    move = require("pantry.jumps.diagnostics").errors,
+  },
+  {
+    keys = { next = "]W", prev = "[W" },
+    desc = { next = "Next warning", prev = "Previous warning" },
+    modes = { "n" },
+    move = require("pantry.jumps.diagnostics").warnings,
+  },
 }

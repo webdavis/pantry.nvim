@@ -172,6 +172,8 @@ Keys        Modes                Moves to ~
 ]j [j       normal, visual, op   next or previous node at the same level
 ]r [r       normal, visual, op   next or previous return
 ]n [n       normal               next or previous merge-conflict marker
+]E [E       normal               next or previous diagnostic error
+]W [W       normal               next or previous diagnostic warning
 ]P [P       normal, visual, op   next or previous paragraph, like } and {
 
 Every key takes a count. A jump from normal mode goes into the |jumplist|,
