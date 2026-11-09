@@ -29,6 +29,18 @@ jumps needs nvim-treesitter to install parsers. The other two plugins are option
 | `{` and `}` | Normal | One block level out or in |
 | `]j` and `[j` | Normal, visual, operator-pending | The next or previous node at the same level |
 | `]r` and `[r` | Normal, visual, operator-pending | The next or previous return |
+| `]c` and `[c` | Normal, visual, operator-pending | The next or previous class start, or change in a diff window |
+| `]C` and `[C` | Normal, visual, operator-pending | The next or previous class end |
+| `]m` and `[m` | Normal, visual, operator-pending | The next or previous function start |
+| `]M` and `[M` | Normal, visual, operator-pending | The next or previous function end |
+| `]l` and `[l` | Normal, visual, operator-pending | The next or previous loop start |
+| `]L` and `[L` | Normal, visual, operator-pending | The next or previous loop end |
+| `]s` and `[s` | Normal, visual, operator-pending | The next or previous local scope |
+| `]z` and `[z` | Normal, visual, operator-pending | The next or previous fold |
+| `]k` and `[k` | Normal, visual, operator-pending | The next or previous conditional |
+| `]v` and `[v` | Normal, visual, operator-pending | The next or previous assignment |
+| `],` and `[,` | Normal, visual, operator-pending | The next or previous argument |
+| `]3` and `[3` | Normal, visual, operator-pending | The next or previous comment |
 | `]n` and `[n` | Normal | The next or previous merge-conflict marker |
 | `]E` and `[E` | Normal | The next or previous diagnostic error |
 | `]W` and `[W` | Normal | The next or previous diagnostic warning |
