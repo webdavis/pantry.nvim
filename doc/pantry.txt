@@ -8,7 +8,8 @@ CONTENTS                                                     *pantry-contents*
   3. linelimit ........................................ |pantry-linelimit|
   4. jumps ................................................ |pantry-jumps|
   5. focus ................................................ |pantry-focus|
-  6. messages .......................................... |pantry-messages|
+  6. markdown .......................................... |pantry-markdown|
+  7. messages .......................................... |pantry-messages|
 
 ==============================================================================
 INTRODUCTION                                                          *pantry*
@@ -278,6 +279,51 @@ enabled
                                                   *pantry-focus-highlights*
 PantryFocusDim   The dimmed lines. Links to |hl-Comment|.
 A colorscheme can set its own color for it.
+
+==============================================================================
+MARKDOWN                                                     *pantry-markdown*
+
+pantry.markdown adds keys to markdown buffers. One key turns a line into a
+task and checks or opens it. The other keys move between checkboxes and code
+blocks. The jump keys need the markdown tree-sitter parser.
+
+Keys        Modes                Action ~
+<C-CR>      normal, insert       toggle the task on the current line
+]x [x       normal, visual, op   next or previous checkbox
+]` [`       normal, visual, op   next or previous fenced code block
+
+The keys exist only in markdown buffers.
+
+                                                 *pantry-markdown-tasks*
+<C-CR> changes the current line by what it holds:
+- A plain line becomes `- [ ] line`. The indent stays.
+- A list item that starts with `- `, `* `, `+ `, `1. ` or `1) ` gets a
+  `[ ] ` box.
+- A task with `[ ]` becomes `[x]`.
+- A task with `[x]` or `[X]` becomes `[ ]`.
+The cursor stays on the same character of the text, in normal and insert
+mode.
+
+                                                 *pantry-markdown-jumps*
+]x and [x stop on each checkbox, checked or not, and skip text inside code
+blocks. ]` and [` stop on the first line of each fenced code block. Every
+jump key takes a count. A jump from normal mode goes into the |jumplist|, so
+|CTRL-O| goes back.
+
+These four keys used to be part of |pantry-jumps|. They moved here with the
+`keys` option that turns them off, so set them in `markdown`, not in `jumps`.
+
+                                                 *pantry-markdown-options*
+keys
+    A table of keys to turn off. Set a key to `false` to keep Neovim's own
+    meaning for it.
+>lua
+    require("pantry").setup({
+      markdown = {
+        keys = { ["<C-CR>"] = false },
+      },
+    })
+<
 
 ==============================================================================
 MESSAGES                                                     *pantry-messages*
