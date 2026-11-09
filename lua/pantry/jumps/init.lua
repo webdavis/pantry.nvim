@@ -17,7 +17,8 @@ end
 
 local map_both_ways = function(kind, off)
   for way in pairs(directions) do
-    if not off[vim.keycode(kind.keys[way])] then
+    local lhs = kind.keys[way]
+    if lhs and not off[vim.keycode(lhs)] then
       map(kind, way)
     end
   end

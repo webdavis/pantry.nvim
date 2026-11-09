@@ -29,6 +29,7 @@ jumps needs nvim-treesitter to install parsers. The other two plugins are option
 | `{` and `}` | Normal | One block level out or in |
 | `]j` and `[j` | Normal, visual, operator-pending | The next or previous node at the same level |
 | `]r` and `[r` | Normal, visual, operator-pending | The next or previous return |
+| `[[` | Normal | Up to the header that nvim-treesitter-context shows |
 | `]c` and `[c` | Normal, visual, operator-pending | The next or previous class start, or change in a diff window |
 | `]C` and `[C` | Normal, visual, operator-pending | The next or previous class end |
 | `]m` and `[m` | Normal, visual, operator-pending | The next or previous function start |
