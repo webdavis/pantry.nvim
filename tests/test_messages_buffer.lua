@@ -22,6 +22,13 @@ T["the history lists recorded messages newest first with time, level and kind"] 
   matches(m.history(), { time .. " error echoerr broken", time .. " info echomsg first" })
 end
 
+T["a warning from vim.notify is recorded as a warn"] = function()
+  m.with_ui()
+  m.setup({ view = "buffer" })
+  child.lua([[vim.notify("careful", vim.log.levels.WARN)]])
+  matches(m.history(), { time .. " warn echomsg careful" })
+end
+
 T["a message of several lines continues on indented lines"] = function()
   m.with_ui()
   m.setup({ view = "buffer" })
