@@ -1,6 +1,7 @@
 local M = {}
 
 local entries = {}
+local earlier = {}
 local wrapper
 
 local LEVELS = {
@@ -31,6 +32,16 @@ local add = function(kind, content, history)
   }
 end
 
+local from_messages = function()
+  local list = {}
+  for _, line in ipairs(vim.split(vim.api.nvim_exec2("messages", { output = true }).output, "\n")) do
+    if line ~= "" then
+      list[#list + 1] = { kind = "", msg = line, level = "info" }
+    end
+  end
+  return list
+end
+
 M.record = function()
   local ok, messages = pcall(require, "vim._core.ui2.messages")
   if not ok or type(messages.msg_show) ~= "function" or messages.msg_show == wrapper then
@@ -43,20 +54,11 @@ M.record = function()
     return msg_show(kind, content, replace_last, history, ...)
   end
   messages.msg_show = wrapper
-end
-
-local from_messages = function()
-  local list = {}
-  for _, line in ipairs(vim.split(vim.api.nvim_exec2("messages", { output = true }).output, "\n")) do
-    if line ~= "" then
-      list[#list + 1] = { kind = "", msg = line, level = "info" }
-    end
-  end
-  return list
+  earlier = from_messages()
 end
 
 M.newest_first = function()
-  local list = #entries > 0 and entries or from_messages()
+  local list = #entries > 0 and vim.list_extend(vim.list_slice(earlier), entries) or from_messages()
   return vim.iter(list):rev():totable()
 end
 

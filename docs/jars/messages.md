@@ -20,6 +20,9 @@ handler is missing, the jar records nothing and every message still shows. The h
 the lines of `:messages`, with no time and no kind. When a new handler takes different arguments,
 the jar skips the history row for each message and the message still shows.
 
+The jar cannot record a message that appeared before setup. The history lists those messages
+below the recorded ones, as the lines of `:messages` with no time and no kind.
+
 ## Keys
 
 | Key | Action |

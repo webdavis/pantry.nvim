@@ -1,3 +1,8 @@
+local format_row = function(item, picker)
+  local format = require("snacks.picker.format")
+  return (item.item.added and format.notification or format.text)(item, picker)
+end
+
 return function(entries)
   local items = {}
   for _, entry in ipairs(entries) do
@@ -16,7 +21,7 @@ return function(entries)
   require("snacks").picker({
     title = "Messages",
     items = items,
-    format = entries[1] and entries[1].added and "notification" or "text",
+    format = format_row,
     preview = "preview",
     formatters = { severity = { level = true } },
     confirm = "close",

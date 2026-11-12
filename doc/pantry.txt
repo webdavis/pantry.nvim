@@ -422,6 +422,10 @@ level and kind. When that handler is missing, the jar records nothing and
 every message still shows. The history then lists the lines of |:messages|
 with no time and no kind.
 
+The jar cannot record a message that appeared before setup. The history
+lists those messages below the recorded ones, as the lines of |:messages|
+with no time and no kind.
+
 Key          Mode     Action ~
 <leader>nh   normal   show the message history, newest first
 

@@ -55,6 +55,14 @@ T["without recorded messages the history shows the lines of :messages"] = functi
   eq(m.history(), { "--:--:-- info plain" })
 end
 
+T["messages from before setup stay listed below the recorded ones"] = function()
+  child.cmd("echomsg 'early'")
+  m.with_ui()
+  m.setup({ view = "buffer" })
+  child.cmd("echomsg 'late'")
+  matches(m.history(), { time .. " info echomsg late", "%-%-:%-%-:%-%- info early" })
+end
+
 T["a ui2 without a msg_show handler still shows messages and records nothing"] = function()
   m.with_ui()
   child.lua([[package.loaded["vim._core.ui2.messages"] = { msg_show = "not a function" }]])
