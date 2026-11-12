@@ -17,6 +17,6 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: just,stylua
-      - run: npm install --global tree-sitter-cli
+      - run: npm install --global tree-sitter-cli@0.27.2
       - run: just test
       - run: stylua --check lua tests scripts
