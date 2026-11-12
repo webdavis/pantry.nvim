@@ -6,6 +6,7 @@ export XDG_STATE_HOME := justfile_directory() / "deps/xdg"
 
 parsers := "bash json lua markdown markdown_inline python rust swift toml yaml"
 pins := "echasnovski/mini.nvim@f9ac12d7cbd2563cfc2cce9a8152fc8df2ad0d6f nvim-treesitter/nvim-treesitter@19bdfc04f40ed2ccb3340591d125f759b0406875 nvim-treesitter/nvim-treesitter-context@8decd73460d26ef0a0befb745d022dd1fc2c38b8 nvim-treesitter/nvim-treesitter-textobjects@5c7b0263797dfd1bd6202f2b219f3b53a80b2187"
+latest := env("LATEST_DEPS", "")
 
 test: deps
     nvim --headless --noplugin -u scripts/minimal_init.lua -c "lua MiniTest.run()"
@@ -19,6 +20,10 @@ deps:
       rev="${pin#*@}"
       dir="deps/${repo#*/}"
       [ -d "$dir" ] || git clone --quiet --filter=blob:none "https://github.com/$repo" "$dir"
+      if [ -n "{{ latest }}" ]; then
+        git -C "$dir" fetch --quiet origin
+        rev=origin/HEAD
+      fi
       git -C "$dir" checkout --quiet --detach "$rev" 2>/dev/null || {
         git -C "$dir" fetch --quiet origin
         git -C "$dir" checkout --quiet --detach "$rev"
