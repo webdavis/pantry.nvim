@@ -12,7 +12,7 @@ jobs:
   test-latest:
     runs-on: ubuntu-latest
     env:
-      LATEST_DEPS: "1"
+      LATEST_PLUGINS: "1"
     steps:
       - uses: actions/checkout@v5
       - uses: rhysd/action-setup-vim@v1
