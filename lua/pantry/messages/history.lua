@@ -11,19 +11,23 @@ local LEVELS = {
   wmsg = "warn",
 }
 
+local HIGHLIGHT_LEVELS = { WarningMsg = "warn", ErrorMsg = "error" }
+
 local add = function(kind, content, history)
   if not history then
     return
   end
   local text = {}
+  local highlighted
   for _, chunk in ipairs(content) do
     text[#text + 1] = chunk[2]
+    highlighted = highlighted or HIGHLIGHT_LEVELS[vim.fn.synIDattr(chunk[3], "name")]
   end
   entries[#entries + 1] = {
     added = os.time(),
     kind = kind ~= "" and kind or "echo",
     msg = table.concat(text),
-    level = LEVELS[kind] or "info",
+    level = LEVELS[kind] or highlighted or "info",
   }
 end
 
