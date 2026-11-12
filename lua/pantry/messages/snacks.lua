@@ -1,6 +1,10 @@
 local format_row = function(item, picker)
-  local format = require("snacks.picker.format")
-  return (item.item.added and format.notification or format.text)(item, picker)
+  local row = require("snacks.picker.format").notification(item, picker)
+  local time = row[1]
+  if not item.item.added and time and time[1]:match("^%d%d:%d%d") then
+    time[1] = (" "):rep(#time[1])
+  end
+  return row
 end
 
 return function(entries)
