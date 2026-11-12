@@ -70,11 +70,15 @@ At the end of a line these keys keep Neovim's own meaning:
   window on the command line.
 - Insert-mode <C-e> inserts the character below the cursor.
 On a search line (`/` or `?`), <C-t> keeps Neovim's meaning.
+When the cursor is already at the first non-blank character, insert-mode
+<C-u> kills to the start of the line.
 
                                                          *pantry-rsi-killring*
-A kill deletes text and saves it in the kill ring. Kills do not change any
-register. <C-y> pastes the latest kill on the command line. Pressing <M-y>
-right after <C-y> replaces the pasted text with the next older kill.
+A kill deletes text and saves it in the kill ring. Insert mode and the
+command line share one ring, so text you kill in a buffer can be pasted on
+the command line. Kills do not change any register. <C-y> pastes the latest
+kill on the command line. Pressing <M-y> right after <C-y> replaces the
+pasted text with the next older kill.
 Pressing <M-.> again replaces the inserted argument with the last argument
 of the command before it.
 
@@ -224,7 +228,8 @@ items of a list.
 pantry adds its own captures for three languages:
 - Rust: the last expression of a function body when it has no semicolon.
 - Swift: a return, and the single expression body of a function that
-  declares a return type. Closures are skipped.
+  declares a return type. The single expression body of a closure does
+  not count.
 - Bash: a return, and an echo or printf that is the last command of a
   function, unless it writes to stderr with >&2.
 
