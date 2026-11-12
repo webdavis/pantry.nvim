@@ -45,7 +45,7 @@ T["auto picks snacks when it loads"] = function()
   m.setup({ ui2 = false })
   child.cmd("echomsg 'plain'")
   m.history()
-  eq(picked().items[1].text, "info  plain")
+  eq(picked().items[1].text, "info plain")
 end
 
 T["the snacks view shows the lines of :messages as plain text"] = function()
