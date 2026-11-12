@@ -1,10 +1,37 @@
 # focus
 
 The focus jar dims every line outside the code around the cursor. While focus is on, two keys show
-more or less of the code. For example, in a JSON file you can light only the current `key: value`
-line, then the object around it, then the whole file.
+more or less of the code.
 
-The focus jar is off until you turn it on. It needs Neovim 0.12 or newer.
+For example, in a JSON file you can light only the current `key: value` line, then the object around
+it, then the whole file.
+
+## Turn it on
+
+Add `focus` to your setup. It needs Neovim 0.12 or newer.
+
+```lua
+require("pantry").setup({ focus = {} })
+```
+
+With `focus = {}`, the jar is set up and off until you turn it on. `:checkhealth pantry` reports it
+as set up and off.
+
+The focus jar has no key to turn it on. Map `toggle()` to a key of your own:
+
+```lua
+vim.keymap.set("n", "<leader>uf", require("pantry.focus").toggle)
+```
+
+## Keys
+
+The keys work in normal mode. They exist only while focus is on, and only in the buffers you visit
+while it is on. Turning focus off removes them.
+
+| Key     | Action                    |
+| ------- | ------------------------- |
+| `<M-o>` | Show more: one level out. |
+| `<M-i>` | Show less: one level in.  |
 
 ## What it lights
 
@@ -19,41 +46,36 @@ lights one tree-sitter node and dims the rest:
 When you turn focus on, it lights the first block around the cursor that spans more than one line.
 The level stays the same when you move the cursor, and the lit lines follow the cursor.
 
-A buffer with no tree-sitter parser has two levels. Level 0 lights the paragraph under the cursor.
-Paragraphs are separated by blank lines. Level 1 lights the whole buffer.
+A buffer with no tree-sitter parser has two levels:
 
-## Keys
+- Level 0 lights the paragraph under the cursor. Blank lines separate paragraphs.
+- Level 1 lights the whole buffer.
 
-The keys work in normal mode. They exist only while focus is on, and only in the buffers you visit
-while it is on. Turning focus off removes them.
+## What it never dims
 
-| Key | Action |
-| --- | --- |
-| `<M-o>` | Show more: one level out. |
-| `<M-i>` | Show less: one level in. |
+The focus jar never dims these:
 
-The focus jar has no key to turn it on. Map `toggle()` to a key of your own:
+- Floating windows.
+- Buffers that have a `buftype`, such as help and terminal buffers.
 
-```lua
-vim.keymap.set("n", "<leader>uf", require("pantry.focus").toggle)
-```
+## Colors
 
-## Functions
-
-- `require("pantry.focus").enable()` turns focus on.
-- `require("pantry.focus").disable()` turns focus off and lights every line.
-- `require("pantry.focus").toggle()` turns focus on when it is off, and off when it is on.
-- `require("pantry.focus").widen()` lights one level more.
-- `require("pantry.focus").narrow()` lights one level less.
-
-`widen()` and `narrow()` do nothing while focus is off.
+`PantryFocusDim` colors the dimmed lines. It links to `Comment`. A colorscheme can set its own color
+for it.
 
 ## Options
 
-| Option | Default | Meaning |
-| --- | --- | --- |
-| `keys` | `{}` | Set a key to `false` to leave it unmapped. |
+These options set the keys and whether focus is on at startup.
+
+| Option    | Default | Meaning                                    |
+| --------- | ------- | ------------------------------------------ |
+| `keys`    | `{}`    | Set a key to `false` to leave it unmapped. |
 | `enabled` | `false` | Set to `true` to turn focus on at startup. |
+
+`enabled = false` written out leaves the jar out, as it does for every jar. pantry then does not set
+it up, and `:checkhealth pantry` does not list it.
+
+This leaves `<M-i>` unmapped:
 
 ```lua
 require("pantry").setup({
@@ -63,13 +85,21 @@ require("pantry").setup({
 })
 ```
 
-With `focus = {}`, the jar is set up and off. `:checkhealth pantry` reports it as set up and off
-until you turn it on.
+## Functions
 
-## Highlight
+Call these from a mapping or from the command line. `widen()` and `narrow()` do nothing while focus
+is off.
 
-`PantryFocusDim` colors the dimmed lines. It links to `Comment`. A colorscheme can set its own color
-for it.
+| Function    | What it does                                          |
+| ----------- | ----------------------------------------------------- |
+| `enable()`  | Turns focus on.                                       |
+| `disable()` | Turns focus off and lights every line.                |
+| `toggle()`  | Turns focus on when it is off, and off when it is on. |
+| `widen()`   | Lights one level more.                                |
+| `narrow()`  | Lights one level less.                                |
 
-The focus jar dims floating windows and buffers that have a `buftype`, such as help and terminal
-buffers, never.
+Each function lives on the focus module. For example, turn focus on:
+
+```lua
+require("pantry.focus").enable()
+```
