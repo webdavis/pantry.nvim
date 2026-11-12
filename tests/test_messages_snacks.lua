@@ -9,8 +9,9 @@ local fake_snacks = function()
   child.lua([[
     package.loaded.snacks = { picker = function(opts) _G.picked = opts end }
     package.loaded["snacks.picker.format"] = {
-      notification = function() return "notification" end,
-      text = function() return "text" end,
+      notification = function(item)
+        return { { "12:34", "SnacksPickerTime" }, { " " .. item.item.msg } }
+      end,
     }
   ]])
 end
@@ -40,7 +41,7 @@ T["the snacks view opens the notification picker newest first"] = function()
     preview = { text = "second", ft = "text" },
   })
   eq(opts.items[2].item.msg, "first")
-  eq(row_format(1), "notification")
+  eq(row_format(1), { { "12:34", "SnacksPickerTime" }, { " second" } })
   opts.items, opts.format = nil, nil
   eq(opts, {
     title = "Messages",
@@ -58,23 +59,25 @@ T["auto picks snacks when it loads"] = function()
   eq(picked().items[1].text, "info plain")
 end
 
-T["the snacks view shows the lines of :messages as plain text"] = function()
+T["the snacks view shows the lines of :messages with a blank time"] = function()
   fake_snacks()
   m.setup({ ui2 = false, view = "snacks" })
   child.cmd("echomsg 'plain'")
   m.history()
-  eq(row_format(1), "text")
+  eq(row_format(1), { { "     ", "SnacksPickerTime" }, { " plain" } })
 end
 
-T["the snacks view shows a message from before setup as plain text below the recorded ones"] = function()
+T["the snacks view lines up a message from before setup below the recorded ones"] = function()
   child.cmd("echomsg 'early'")
   m.with_ui()
   fake_snacks()
   m.setup({ view = "snacks" })
   child.cmd("echomsg 'late'")
   m.history()
-  eq({ picked().items[1].text, row_format(1) }, { "info echomsg late", "notification" })
-  eq({ picked().items[2].text, row_format(2) }, { "info early", "text" })
+  eq(picked().items[1].text, "info echomsg late")
+  eq(picked().items[2].text, "info early")
+  eq(row_format(1), { { "12:34", "SnacksPickerTime" }, { " late" } })
+  eq(row_format(2), { { "     ", "SnacksPickerTime" }, { " early" } })
 end
 
 T["auto falls back to the buffer view without snacks"] = function()
