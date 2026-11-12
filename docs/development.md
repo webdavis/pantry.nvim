@@ -31,7 +31,7 @@ The `justfile` pins each test plugin to one commit, so a plugin update cannot br
 surprise. Run the tests against the newest commit of each plugin:
 
 ```bash
-LATEST_DEPS=1 just test
+LATEST_PLUGINS=1 just test
 ```
 
 GitHub runs this once a week, with the newest tree-sitter CLI. When it fails, fix pantry, then move
