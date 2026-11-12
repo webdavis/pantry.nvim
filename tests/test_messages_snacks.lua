@@ -6,11 +6,21 @@ local eq = MiniTest.expect.equality
 local T = MiniTest.new_set({ hooks = hooks })
 
 local fake_snacks = function()
-  child.lua([[package.loaded.snacks = { picker = function(opts) _G.picked = opts end }]])
+  child.lua([[
+    package.loaded.snacks = { picker = function(opts) _G.picked = opts end }
+    package.loaded["snacks.picker.format"] = {
+      notification = function() return "notification" end,
+      text = function() return "text" end,
+    }
+  ]])
+end
+
+local row_format = function(index)
+  return child.lua_get("_G.picked.format(_G.picked.items[...])", { index })
 end
 
 local picked = function()
-  return child.lua_get("_G.picked")
+  return child.lua_get("vim.tbl_extend('force', _G.picked, { format = type(_G.picked.format) })")
 end
 
 T["the snacks view opens the notification picker newest first"] = function()
@@ -30,10 +40,10 @@ T["the snacks view opens the notification picker newest first"] = function()
     preview = { text = "second", ft = "text" },
   })
   eq(opts.items[2].item.msg, "first")
-  opts.items = nil
+  eq(row_format(1), "notification")
+  opts.items, opts.format = nil, nil
   eq(opts, {
     title = "Messages",
-    format = "notification",
     preview = "preview",
     formatters = { severity = { level = true } },
     confirm = "close",
@@ -53,7 +63,18 @@ T["the snacks view shows the lines of :messages as plain text"] = function()
   m.setup({ ui2 = false, view = "snacks" })
   child.cmd("echomsg 'plain'")
   m.history()
-  eq(picked().format, "text")
+  eq(row_format(1), "text")
+end
+
+T["the snacks view shows a message from before setup as plain text below the recorded ones"] = function()
+  child.cmd("echomsg 'early'")
+  m.with_ui()
+  fake_snacks()
+  m.setup({ view = "snacks" })
+  child.cmd("echomsg 'late'")
+  m.history()
+  eq({ picked().items[1].text, row_format(1) }, { "info echomsg late", "notification" })
+  eq({ picked().items[2].text, row_format(2) }, { "info early", "text" })
 end
 
 T["auto falls back to the buffer view without snacks"] = function()
