@@ -1,0 +1,26 @@
+name: latest
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/latest.yml
+
+jobs:
+  test-latest:
+    runs-on: ubuntu-latest
+    env:
+      LATEST_DEPS: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - run: npm install --global tree-sitter-cli
+      - run: just test

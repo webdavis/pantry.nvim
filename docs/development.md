@@ -25,6 +25,18 @@ The first run sets up `deps/`:
 The tests use their own Neovim data directory under `deps/`, so they never touch your own parsers
 and plugins.
 
+## Test against the newest plugins
+
+The `justfile` pins each test plugin to one commit, so a plugin update cannot break the tests by
+surprise. Run the tests against the newest commit of each plugin:
+
+```bash
+LATEST_DEPS=1 just test
+```
+
+GitHub runs this once a week, with the newest tree-sitter CLI. When it fails, fix pantry, then move
+the pins in the `justfile` to the new commits.
+
 ## Format the code
 
 Format the Lua files:
