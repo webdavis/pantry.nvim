@@ -120,4 +120,67 @@ Helpers.messaging = function(child)
   return m
 end
 
+Helpers.saving = function(child)
+  local s = {}
+  s.setup = function(opts)
+    child.lua(
+      [[
+      _G.notices = {}
+      vim.notify = function(message)
+        table.insert(_G.notices, message)
+      end
+      require("pantry").setup({ autosave = ... })
+    ]],
+      { opts or {} }
+    )
+  end
+  s.folder = function()
+    local path = child.fn.tempname()
+    child.fn.mkdir(path, "p")
+    return child.fn.resolve(path)
+  end
+  s.file = function(folder, name, lines)
+    local path = folder .. "/" .. name
+    child.fn.writefile(lines or { "on disk" }, path)
+    return path
+  end
+  s.open = function(path)
+    child.cmd("edit " .. child.fn.fnameescape(path))
+  end
+  s.change = function(lines)
+    child.api.nvim_buf_set_lines(0, 0, -1, false, lines or { "changed" })
+  end
+  s.changed_file = function(name, lines)
+    local path = s.file(s.folder(), name or "note.txt", lines)
+    s.open(path)
+    s.change()
+    return path
+  end
+  s.leave = function()
+    child.cmd("enew")
+  end
+  s.lose_focus = function()
+    child.cmd("doautocmd FocusLost")
+  end
+  s.edit = function()
+    child.cmd("doautocmd TextChanged")
+  end
+  s.wait = function()
+    child.lua("vim.wait(150)")
+  end
+  s.on_disk = function(path)
+    return child.fn.readfile(path)
+  end
+  s.notices = function()
+    return child.lua_get("_G.notices")
+  end
+  s.call = function(name)
+    child.lua(('require("pantry.autosave").%s()'):format(name))
+  end
+  s.status = function()
+    return child.lua_get([[require("pantry.autosave").status()]])
+  end
+  return s
+end
+
 return Helpers
