@@ -15,6 +15,7 @@ rest never load.
 | [focus](docs/jars/focus.md)         | Dim everything except the code around the cursor, and show more or less of it with a key                                                      |
 | [markdown](docs/jars/markdown.md)   | Check off a task with one key, and move between checkboxes and code blocks                                                                    |
 | [messages](docs/jars/messages.md)   | See every message again on one key, with its time and level. It also turns on Neovim's experimental message window                            |
+| [autosave](docs/jars/autosave.md)   | Save a file for you when you stop working on it, and never over a change that someone else made on disk                                       |
 
 Each jar's page lists its keys and options.
 
@@ -41,6 +42,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
     focus = {},
     markdown = {},
     messages = {},
+    autosave = {},
   },
 }
 ```
@@ -60,6 +62,7 @@ require("pantry").setup({
   focus = {},
   markdown = {},
   messages = {},
+  autosave = {},
 })
 ```
 

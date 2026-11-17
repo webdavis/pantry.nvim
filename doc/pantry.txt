@@ -10,6 +10,7 @@ CONTENTS                                                     *pantry-contents*
   5. focus ................................................ |pantry-focus|
   6. markdown .......................................... |pantry-markdown|
   7. messages .......................................... |pantry-messages|
+  8. autosave .......................................... |pantry-autosave|
 
 ==============================================================================
 INTRODUCTION                                                          *pantry*
@@ -454,6 +455,81 @@ keys
       messages = {
         view = "buffer",
         keys = { ["<leader>sm"] = "history_snacks" },
+      },
+    })
+<
+
+==============================================================================
+AUTOSAVE                                                     *pantry-autosave*
+
+pantry.autosave saves a file when you stop working on it. With
+`autosave = {}` it saves from the start.
+
+A leave save happens at once when you leave the buffer, suspend Neovim or
+quit. A pause save happens `delay` milliseconds after you change text or
+leave insert mode, and going back into insert mode holds it. When Neovim
+loses focus, the jar saves every changed buffer. While a macro records or
+runs, pause saves wait.
+
+The jar saves only an ordinary file buffer that has changes. It leaves
+alone a buffer with no name, a buffer that has a 'buftype', a file that is
+not on disk yet, and a buffer where `vim.b.pantry_autosave` is `false`.
+
+The jar does not save a file that changed on disk since Neovim read or
+wrote it, a file that is gone from disk, or a file you cannot write. It
+says so once for each buffer, and again only after the buffer is saved or
+reloaded.
+
+                                                              *b:pantry_save*
+While the jar writes a buffer, `vim.b.pantry_save` in that buffer is
+`"leave"` or `"pause"`. At every other time it is `nil`, including during a
+save by hand. A plugin that acts on every save can read it.
+
+                                                *pantry.autosave.enable()*
+                                               *pantry.autosave.disable()*
+                                                *pantry.autosave.toggle()*
+                                                *pantry.autosave.status()*
+pantry.autosave.enable()
+pantry.autosave.disable()
+pantry.autosave.toggle()
+    Turn saving on, off, or to the other state. Turning it on uses the mode
+    from your setup.
+pantry.autosave.status()
+    Returns a table that says what the jar would do with the current
+    buffer: `mode`, `saves`, `reason` and `pending`.
+
+                                                  *pantry-autosave-options*
+mode
+    `"on"` saves. `"off"` sets the jar up and waits for you to turn it on.
+    `"auto"` lets rules decide for each buffer. Default: `"on"`.
+
+delay
+    Milliseconds to wait before a pause save. Default: `1000`.
+
+skip
+    A list of filetypes to leave alone. Default: `{}`.
+
+condition
+    A function that gets the buffer number. Return `false` to leave the
+    buffer alone.
+
+paths
+    Glob patterns for `"auto"`. A file under a path in `off` is not saved.
+    When `on` lists any path, only files under one of them are saved.
+    Default: `{ on = {}, off = {} }`.
+
+when
+    A function for `"auto"` that gets the buffer number. Return `true` to
+    save and `false` not to. It decides before every other rule.
+
+In `"auto"`, the first of these that applies wins: `when`, a git rebase,
+merge, cherry-pick, revert or bisect in progress, conflict markers in the
+buffer, `paths.off`, `paths.on`. Otherwise the jar saves.
+>lua
+    require("pantry").setup({
+      autosave = {
+        mode = "auto",
+        paths = { off = { "~/work/**" } },
       },
     })
 <
