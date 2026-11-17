@@ -120,7 +120,8 @@ Helpers.messaging = function(child)
   return m
 end
 
-Helpers.saving = function(child)
+Helpers.saving = function(child, jar)
+  jar = jar or "autosave"
   local s = {}
   s.setup = function(opts)
     child.lua(
@@ -129,9 +130,10 @@ Helpers.saving = function(child)
       vim.notify = function(message)
         table.insert(_G.notices, message)
       end
-      require("pantry").setup({ autosave = ... })
+      local jar, opts = ...
+      require("pantry").setup({ [jar] = opts })
     ]],
-      { opts or {} }
+      { jar, opts or {} }
     )
   end
   s.folder = function()
@@ -175,7 +177,7 @@ Helpers.saving = function(child)
     return child.lua_get("_G.notices")
   end
   s.call = function(name)
-    child.lua(('require("pantry.autosave").%s()'):format(name))
+    child.lua(('require("pantry.%s").%s()'):format(jar, name))
   end
   s.status = function()
     return child.lua_get([[require("pantry.autosave").status()]])

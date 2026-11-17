@@ -11,6 +11,7 @@ CONTENTS                                                     *pantry-contents*
   6. markdown .......................................... |pantry-markdown|
   7. messages .......................................... |pantry-messages|
   8. autosave .......................................... |pantry-autosave|
+  9. savetools ........................................ |pantry-savetools|
 
 ==============================================================================
 INTRODUCTION                                                          *pantry*
@@ -530,6 +531,79 @@ buffer, `paths.off`, `paths.on`. Otherwise the jar saves.
       autosave = {
         mode = "auto",
         paths = { off = { "~/work/**" } },
+      },
+    })
+<
+
+==============================================================================
+SAVETOOLS                                                   *pantry-savetools*
+
+pantry.savetools does the small jobs around a save. Each tool says what it
+did in one line, with the reason.
+
+Tool         What it does ~
+folders      makes the folder when you save into one that does not exist
+executable   makes a new script executable, when its folder shows that
+             scripts there are
+typos        saves your buffer when a slip such as `:w]` would have written
+             a stray file instead
+vanished     warns when the file was deleted on disk and your save brought
+             it back
+filetype     sets the filetype after a save when the buffer had none
+
+The executable tool looks only at a save that creates a file whose first
+line starts with `#!`. It never changes a file that already exists. The
+first of these that applies wins:
+- The folder is in `executable.never`: the file is left alone.
+- The folder is in `executable.always` or on your `PATH`: the file becomes
+  executable.
+- Every other script in the folder is executable: the file becomes
+  executable.
+- The folder has no other script: the file is left alone, and the jar says
+  so.
+- The scripts in the folder are mixed: the file is left alone.
+
+The typos tool acts only on a name of one or two of the keys `]`, `[`, `\`,
+`;`, `'`, `=` and the backtick, and only when no file of that name exists.
+`:w! ]` writes the name as you typed it.
+
+                                                  *pantry.savetools.sudo()*
+                                                 *pantry.savetools.plain()*
+                                               *pantry.savetools.explain()*
+pantry.savetools.sudo()
+    Save the current buffer through sudo. The prompt shows the real path,
+    its owner and its mode, and takes your password hidden. An empty answer
+    cancels. The password goes to sudo on its standard input and is not
+    kept. The file keeps its owner and mode. It refuses a file that changed
+    on disk since Neovim read it.
+pantry.savetools.plain()
+    Save the current buffer once, marked as a plain save. While it writes,
+    |b:pantry_save| is `"plain"`. During a sudo save it is `"sudo"`.
+pantry.savetools.explain()
+    Show what a save of the current buffer would do, without saving, and
+    return the lines as a list.
+
+                                                 *pantry-savetools-options*
+notify
+    Set to `false` to silence the notes. Warnings still show.
+    Default: `true`.
+
+executable
+    A table with `always` and `never`, each a list of folders. A bare name
+    matches any folder of that name. A path matches that one folder, and
+    `**` reaches the folders below it. Set to `false` to turn the tool off.
+    Default: `{ always = { "bin" }, never = {} }`.
+
+folders
+typos
+vanished
+filetype
+    Set to `false` to turn that tool off.
+>lua
+    require("pantry").setup({
+      savetools = {
+        executable = { always = { "bin", "scripts" } },
+        filetype = false,
       },
     })
 <
