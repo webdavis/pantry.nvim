@@ -73,6 +73,25 @@ T["a leave save says so while it writes"] = function()
   eq(child.lua_get("vim.b[vim.fn.bufnr('#')].pantry_save"), vim.NIL)
 end
 
+T["quitting a window saves its buffer as a leave save"] = function()
+  s.setup()
+  record_save_kinds()
+  local path = s.changed_file()
+  child.cmd("split")
+  child.cmd("quit")
+  eq(s.on_disk(path), { "changed" })
+  eq(child.lua_get("_G.kinds"), { "leave" })
+end
+
+T["suspending Neovim saves the buffer as a leave save"] = function()
+  s.setup()
+  record_save_kinds()
+  local path = s.changed_file()
+  child.cmd("doautocmd VimSuspend")
+  eq(s.on_disk(path), { "changed" })
+  eq(child.lua_get("_G.kinds"), { "leave" })
+end
+
 T["a pause save says so while it writes"] = function()
   s.setup({ delay = 20 })
   record_save_kinds()
